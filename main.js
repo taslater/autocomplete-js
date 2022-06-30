@@ -1,11 +1,31 @@
 let maxResults
+const wordTree = {}
 
-window.addEventListener("load", ()=>{
+window.addEventListener("load", async () => {
   const textInput = document.getElementById("text-input")
   const resultUl = document.getElementById("result-ul")
   maxResults = resultUl.childElementCount
-  textInput.addEventListener("input", textListener)
+  // textInput.addEventListener("input", textListener)
+  fetch('./words.txt')
+    .then(res => res.text())
+    .then(text => text.split('\n'))
+    .then(wordsArray => buildWordTree(wordsArray))
+    .then(() => textInput.addEventListener("input", textListener))
+    .then(() => console.log('Word tree is built'))
+    .catch(error => console.log(error))
 })
+
+function buildWordTree(wordsArray) {
+  for (const word of wordsArray) {
+    let layer = wordTree
+    for (const c of word.toLowerCase()) {
+      if (!layer.hasOwnProperty(c)) {
+        layer[c] = {}
+      }
+      layer = layer[c]
+    }
+  }
+}
 
 function textListener(e) {
   const partialText = e.target.value
