@@ -5,7 +5,7 @@ window.addEventListener("load", async () => {
   const textInput = document.getElementById("text-input")
   const resultUl = document.getElementById("result-ul")
   maxResults = resultUl.childElementCount
-  // textInput.addEventListener("input", textListener)
+
   fetch('./words.txt')
     .then(res => res.text())
     .then(text => text.split('\n'))
