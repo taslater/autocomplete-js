@@ -24,6 +24,7 @@ function buildWordTree(wordsArray) {
       }
       layer = layer[c]
     }
+    layer["word"] = word
   }
 }
 
@@ -39,30 +40,17 @@ function textListener(e) {
     showResults(done)
     return
   }
-  const layerKeys = Object.keys(layer)
-  layerKeys.sort()
-  const active = layerKeys
-    .map(c => (
-      {
-        ending: c,
-        children: layer[c]
-      }))
+  active = Object.values(layer)
   while (done.length < maxResults) {
     if (active.length === 0) break
-    const {ending, children} = active.shift()
-    const childKeys = Object.keys(children)
-    childKeys.sort()
-    if (childKeys.length === 0) {
-      done.push(partialText + ending)
+    current = active.shift()
+    if (typeof current === 'string') {
+      done.push(current)
       continue
     }
-    for (const c of childKeys) {
-      active.push({
-        ending: ending + c,
-        children: children[c]
-      })
-    }
+    active = active.concat(Object.values(current))
   }
+  done.sort()
   showResults(done)
 }
 
